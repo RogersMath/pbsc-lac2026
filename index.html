@@ -153,7 +153,7 @@
 
         .scroll-indicator {
             position: absolute;
-            bottom: 2rem;
+            bottom: 12rem;
             left: 50%;
             transform: translateX(-50%);
             font-size: 0.9rem;
@@ -164,6 +164,35 @@
         @keyframes bounce {
             0%, 100% { transform: translateX(-50%) translateY(0); }
             50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        /* QR Code Section */
+        .qr-code-container {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            animation: fadeIn 1.5s ease-out 0.5s backwards;
+        }
+
+        .qr-code {
+            width: 140px;
+            height: 140px;
+            background: white;
+            padding: 0.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            display: block;
+            margin: 0 auto;
+        }
+
+        .qr-caption {
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+            opacity: 0.85;
+            font-weight: 600;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
         }
 
         /* Main Content */
@@ -461,6 +490,15 @@
             main {
                 padding: 2rem 1rem;
             }
+
+            .scroll-indicator {
+                bottom: 10rem;
+            }
+
+            .qr-code {
+                width: 120px;
+                height: 120px;
+            }
         }
 
         /* Reduced motion support */
@@ -487,7 +525,8 @@
         /* Print styles */
         @media print {
             .skip-link,
-            .scroll-indicator {
+            .scroll-indicator,
+            .qr-code-container {
                 display: none;
             }
 
@@ -524,6 +563,11 @@
             <p class="hero-byline">Jesse J. Rogers • Palm Beach State College</p>
         </div>
         <div class="scroll-indicator" aria-hidden="true">↓ Scroll to explore ↓</div>
+        
+        <div class="qr-code-container">
+            <img src="qr.png" alt="QR code to access this presentation" class="qr-code">
+            <p class="qr-caption">Scan to follow along</p>
+        </div>
     </section>
 
     <main id="main-content" role="main">
@@ -621,9 +665,4 @@
         <p><strong>Jesse J. Rogers</strong><br>
         Learning Lab Coordinator<br>
         Palm Beach State College</p>
-        <p>Email: <a href="mailto:rogersjj@pbsc.edu">rogersjj@pbsc.edu</a></p>
-        <p style="margin-top: 1.5rem; opacity: 0.8;">Liberal Arts Conference 2026</p>
-    </footer>
-
-</body>
-</html>
+        <p>Email: <a href="/cdn-cgi/l/email-protection#8cfee3ebe9feffe6e6ccfceeffefa2e9e8f9"><span class="__cf_email__" data-cfemail="daa8b5bdbfa8a9b0b09aaab8a9b9f4bfbeaf">[email&#160;protected]</
