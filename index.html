@@ -153,7 +153,7 @@
 
         .scroll-indicator {
             position: absolute;
-            bottom: 14rem;
+            bottom: 2rem;
             left: 50%;
             transform: translateX(-50%);
             font-size: 0.9rem;
@@ -168,11 +168,8 @@
 
         /* QR Code Section */
         .qr-code-container {
-            position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
             text-align: center;
+            margin-bottom: 2rem;
         }
 
         .qr-code {
@@ -191,7 +188,7 @@
             font-size: 0.9rem;
             opacity: 0.85;
             font-weight: 600;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+            color: var(--light-text);
         }
 
         /* Main Content */
@@ -488,10 +485,6 @@
                 padding: 2rem 1rem;
             }
 
-            .scroll-indicator {
-                bottom: 12rem;
-            }
-
             .qr-code {
                 width: 120px;
                 height: 120px;
@@ -560,11 +553,6 @@
             <p class="hero-byline">Jesse J. Rogers • Palm Beach State College</p>
         </div>
         <div class="scroll-indicator" aria-hidden="true">↓ Scroll to explore ↓</div>
-        
-        <div class="qr-code-container">
-            <img src="qr.png" alt="QR code to access this presentation" class="qr-code" width="140" height="140">
-            <p class="qr-caption">Scan to follow along</p>
-        </div>
     </section>
 
     <main id="main-content">
@@ -663,6 +651,10 @@
     </main>
 
     <footer>
+        <div class="qr-code-container">
+            <img src="qr.png" alt="QR code to access this presentation" class="qr-code" width="140" height="140">
+            <p class="qr-caption">Scan to access this presentation</p>
+        </div>
         <p><strong>Jesse J. Rogers</strong><br>
         Learning Lab Coordinator<br>
         Palm Beach State College</p>
