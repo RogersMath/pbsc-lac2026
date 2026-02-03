@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Fighting Fake News With... Games? A presentation on using AI and game design to combat disinformation.">
+    <meta name="author" content="Jesse J. Rogers, Palm Beach State College">
+    <title>Fighting Fake News With... Games? | Liberal Arts Conference</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* PBSC Brand Colors - AAA compliant */
+            --pbsc-blue: #002855;
+            --pbsc-blue-light: #003d7a;
+            --pbsc-green: #006b42;
+            --pbsc-gold: #c08600;
+            
+            /* Additional palette */
+            --page-bg: #f8f6f3;
+            --dark-text: #000000;
+            --light-text: #ffffff;
+            --subtle-text: #4a4a4a;
+            --accent-red: #8b1a1a;
+            --border-color: #cccccc;
+            --focus-color: #005a9c;
+            
+            /* Typography scale */
+            --display-font: 'Playfair Display', Georgia, serif;
+            --body-font: 'Source Serif 4', Georgia, serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: var(--body-font);
+            background-color: var(--page-bg);
+            color: var(--dark-text);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* Skip to main content link */
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 0;
+            background: var(--pbsc-blue);
+            color: var(--light-text);
+            padding: 1rem 2rem;
+            text-decoration: none;
+            font-weight: bold;
+            z-index: 9999;
+            border-radius: 0 0 4px 0;
+        }
+
+        .skip-link:focus {
+            top: 0;
+            outline: 4px solid var(--pbsc-gold);
+            outline-offset: 2px;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--pbsc-blue) 0%, #001a3a 50%, var(--accent-red) 100%);
+            color: var(--light-text);
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 255, 255, 0.03) 2px,
+                    rgba(255, 255, 255, 0.03) 4px
+                );
+            pointer-events: none;
+            animation: scanlines 8s linear infinite;
+        }
+
+        @keyframes scanlines {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(4px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1000px;
+            text-align: center;
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-family: var(--display-font);
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            opacity: 0.95;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .hero-byline {
+            font-size: 1.1rem;
+            opacity: 0.85;
+            font-style: italic;
+            margin-bottom: 3rem;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9rem;
+            opacity: 0.7;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        /* Main Content */
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* Section Styling */
+        section {
+            margin: 4rem 0;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Resource Cards */
+        .resource-card {
+            background: white;
+            border: 4px solid var(--pbsc-blue);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin: 3rem 0;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(0, 40, 85, 0.1);
+        }
+
+        .resource-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, var(--pbsc-blue), var(--pbsc-green), var(--pbsc-gold));
+            border-radius: 8px 8px 0 0;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0, 40, 85, 0.2);
+            border-color: var(--pbsc-green);
+        }
+
+        .resource-number {
+            font-family: var(--display-font);
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--pbsc-gold);
+            opacity: 0.2;
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            line-height: 1;
+        }
+
+        .resource-card h2 {
+            font-family: var(--display-font);
+            font-size: 2rem;
+            color: var(--pbsc-blue);
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+            font-weight: 700;
+        }
+
+        /* Reflection Questions */
+        .reflection-box {
+            background: linear-gradient(135deg, #f0f9ff 0%, #fff8e1 100%);
+            border-left: 6px solid var(--pbsc-green);
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .reflection-box h3 {
+            font-family: var(--display-font);
+            font-size: 1.4rem;
+            color: var(--pbsc-blue);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .reflection-box p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 1.25rem;
+            color: var(--dark-text);
+            font-style: italic;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .reflection-box p::before {
+            content: '"';
+            position: absolute;
+            left: 0;
+            top: -0.2rem;
+            font-size: 2.5rem;
+            color: var(--pbsc-gold);
+            font-family: var(--display-font);
+            line-height: 1;
+        }
+
+        .reflection-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Large Buttons */
+        .resource-link {
+            display: inline-block;
+            background: transparent;
+            color: var(--dark-text);
+            border: 4px solid var(--pbsc-blue);
+            padding: 1.5rem 2.5rem;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.15rem;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin: 1rem 0;
+            line-height: 1.6;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resource-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--pbsc-blue);
+            transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+        }
+
+        .resource-link:hover {
+            color: var(--light-text);
+            border-color: var(--pbsc-blue);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 40, 85, 0.3);
+        }
+
+        .resource-link:hover::before {
+            left: 0;
+        }
+
+        .resource-link:focus-visible {
+            outline: 4px solid var(--pbsc-gold);
+            outline-offset: 4px;
+        }
+
+        /* Reveal Section */
+        .reveal-section {
+            background: var(--pbsc-blue);
+            color: var(--light-text);
+            padding: 3rem;
+            margin: 4rem -2rem;
+            border-radius: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .reveal-section::before {
+            content: '?';
+            position: absolute;
+            top: -2rem;
+            right: 2rem;
+            font-size: 15rem;
+            font-family: var(--display-font);
+            font-weight: 900;
+            opacity: 0.05;
+            line-height: 1;
+        }
+
+        .reveal-section h2 {
+            font-family: var(--display-font);
+            font-size: 2.2rem;
+            color: var(--pbsc-gold);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 2;
+        }
+
+        .reveal-section p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Final Thought */
+        .final-thought {
+            background: linear-gradient(135deg, var(--pbsc-green) 0%, #004d2e 100%);
+            color: var(--light-text);
+            padding: 3rem;
+            margin: 4rem -2rem;
+            border-radius: 0;
+            position: relative;
+        }
+
+        .final-thought h2 {
+            font-family: var(--display-font);
+            font-size: 2.2rem;
+            color: var(--pbsc-gold);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .final-thought p {
+            font-size: 1.2rem;
+            line-height: 1.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .final-thought p:last-child {
+            margin-bottom: 0;
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+
+        /* Quote styling */
+        .quote-mark {
+            font-family: var(--display-font);
+            font-size: 4rem;
+            color: var(--pbsc-gold);
+            opacity: 0.3;
+            line-height: 0;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--pbsc-blue);
+            color: var(--light-text);
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-top: 4rem;
+            border-top: 6px solid var(--pbsc-gold);
+        }
+
+        footer p {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        footer a {
+            color: var(--pbsc-gold);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+            color: var(--light-text);
+        }
+
+        footer a:focus-visible {
+            outline: 4px solid var(--light-text);
+            outline-offset: 4px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .resource-card {
+                padding: 2rem;
+            }
+
+            .resource-number {
+                font-size: 3rem;
+            }
+
+            .reveal-section,
+            .final-thought {
+                margin-left: -1rem;
+                margin-right: -1rem;
+                padding: 2rem;
+            }
+
+            main {
+                padding: 2rem 1rem;
+            }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            .resource-card {
+                border-width: 6px;
+            }
+            
+            .resource-link {
+                border-width: 6px;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .skip-link,
+            .scroll-indicator {
+                display: none;
+            }
+
+            .hero {
+                background: white;
+                color: black;
+                min-height: auto;
+                page-break-after: always;
+            }
+
+            .reveal-section,
+            .final-thought {
+                background: white;
+                color: black;
+                border: 4px solid black;
+            }
+
+            a[href^="http"]:after {
+                content: " (" attr(href) ")";
+                font-size: 0.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip to main content for keyboard users -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Hero Section -->
+    <section class="hero" role="banner">
+        <div class="hero-content">
+            <h1>Fighting Fake News<br>With... Games?</h1>
+            <p class="hero-subtitle">A Liberal Arts Conference Presentation</p>
+            <p class="hero-byline">Jesse J. Rogers • Palm Beach State College</p>
+        </div>
+        <div class="scroll-indicator" aria-hidden="true">↓ Scroll to explore ↓</div>
+    </section>
+
+    <main id="main-content" role="main">
+
+        <!-- First Resource -->
+        <article class="resource-card">
+            <span class="resource-number" aria-hidden="true">01</span>
+            <h2>The Foundation: Read the Article</h2>
+            <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 2rem;">
+                Start with the core argument: How do we respond when unethical actors weaponize AI for disinformation, political manipulation, and election interference? This Substack article explores the ethical dimensions of fighting back with the same tools.
+            </p>
+            <a href="https://jesserogers.substack.com/p/fighting-fake-news-with-games" 
+               class="resource-link" 
+               target="_blank" 
+               rel="noopener noreferrer">
+                Read "Fighting Fake News With... Games?"<br>
+                <span style="font-size: 0.95rem; opacity: 0.8;">Full article on Substack</span>
+            </a>
+
+            <div class="reflection-box">
+                <h3>Reflection Questions</h3>
+                <p>Unethical disinformation, including political manipulation and election interference, is amplified by AI. But should ethical people use AI too, or just leave this tool to deceptive bad actors?</p>
+                <p>Are games 'art'?</p>
+                <p>Can AI be 'art'?</p>
+            </div>
+        </article>
+
+        <!-- Second Resource -->
+        <article class="resource-card">
+            <span class="resource-number" aria-hidden="true">02</span>
+            <h2>Art as Process: Brandon Sanderson</h2>
+            <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 2rem;">
+                Bestselling fantasy author Brandon Sanderson challenges our assumptions about where art actually resides. Is it in the artifact we create, or in the human being doing the creating? His perspective reframes how we think about AI-assisted creativity.
+            </p>
+            <a href="https://youtu.be/mb3uK-_QkOo?si=7VWS-Qr_cuUOtSUQ" 
+               class="resource-link" 
+               target="_blank" 
+               rel="noopener noreferrer">
+                Watch "We Are The Art"<br>
+                <span style="font-size: 0.95rem; opacity: 0.8;">Brandon Sanderson on YouTube</span>
+            </a>
+        </article>
+
+        <!-- Third Resource -->
+        <article class="resource-card">
+            <span class="resource-number" aria-hidden="true">03</span>
+            <h2>Bad News: A Disinformation Game</h2>
+            <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 2rem;">
+                Bad News puts you in the role of a fake news creator. By understanding disinformation tactics from the inside, players develop psychological resistance to manipulation. This is "inoculation theory" in practice.
+            </p>
+            <a href="https://www.getbadnews.com/en/intro" 
+               class="resource-link" 
+               target="_blank" 
+               rel="noopener noreferrer">
+                Play Bad News<br>
+                <span style="font-size: 0.95rem; opacity: 0.8;">BAD NEWS GAME</span>
+            </a>
+        </article>
+
+        <!-- Fourth Resource -->
+        <article class="resource-card">
+            <span class="resource-number" aria-hidden="true">04</span>
+            <h2>Narrative Front: An AI-Built Response</h2>
+            <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 2rem;">
+                Narrative Front is a tug-of-war tower defense game where players defend against waves of disinformation using counter-narratives. Players must balance accuracy, emotional resonance, and timing to prevent false narratives from overwhelming their defenses. Built with AI assistance and released under MIT license for the global defense community.
+            </p>
+            <a href="https://playloadorg.github.io/narrative-front/" 
+               class="resource-link" 
+               target="_blank" 
+               rel="noopener noreferrer">
+                Play Narrative Front<br>
+                <span style="font-size: 0.95rem; opacity: 0.8;">Cogwar defense game</span>
+            </a>
+        </article>
+
+        <!-- Reveal Section -->
+        <section class="reveal-section">
+            <h2>The Reveal</h2>
+            <p>One of these games was created as a collaboration between Cambridge University and DROG game studio, the other I created with a $20 AI subscription. It did virtually all the coding.</p>
+            <p style="margin-top: 1.5rem; font-weight: 600; font-size: 1.3rem;">Can you tell which is which?</p>
+        </section>
+
+        <!-- Final Thought -->
+        <section class="final-thought">
+            <h2>Final Thought: Amplifying Human Value</h2>
+            <p>AI used thoughtfully does not eliminate human value, it amplifies it. Imagine a field of grass as problems that need to be solved. Traditional work requires large groups hand coding and directly researching individual sources. It's like cutting grass with scissors. It can be done, but coordination is hard, and it takes an army of labor.</p>
+            <p>AI is like an industrial mower, where one person can plough down a large number of problems, but also might break things if they drive recklessly.</p>
+            <p>Some speak of a crisis of meaning. Well we've got a LOT of problems. I don't worry about running out of problems.</p>
+            <p>Reach out. Help me mow.</p>
+        </section>
+
+    </main>
+
+    <footer role="contentinfo">
+        <p><strong>Jesse J. Rogers</strong><br>
+        Learning Lab Coordinator<br>
+        Palm Beach State College</p>
+        <p>Email: <a href="mailto:rogersjj@pbsc.edu">rogersjj@pbsc.edu</a></p>
+        <p style="margin-top: 1.5rem; opacity: 0.8;">Liberal Arts Conference 2026</p>
+    </footer>
+
+</body>
+</html>
